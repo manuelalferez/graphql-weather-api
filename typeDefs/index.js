@@ -6,7 +6,8 @@ const typeDefs = gql`
     name: String
     country: String
     coord: Coordinates
-    weather: Weather
+    today: Weather
+    lastSevenDays: [Weather]
   }
 
   type Coordinates {
@@ -18,31 +19,27 @@ const typeDefs = gql`
     title: String
     description: String
     icon: String
+    pressure: Int
+    sunrise: Int
+    sunset: Int
+    humidity: Int
+    visibility: Int
   }
 
   type Temperature {
     actual: Float
-    feelsLike: Float
     min: Float
     max: Float
   }
 
   type Wind {
     speed: Float
-    deg: Int
-  }
-
-  type Clouds {
-    all: Int
-    visibility: Int
-    humidity: Int
   }
 
   type Weather {
     summary: Summary
     temperature: Temperature
     wind: Wind
-    clouds: Clouds
     timestamp: Int
   }
 

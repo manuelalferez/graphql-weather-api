@@ -1,119 +1,100 @@
 const axios = require("axios");
 const { UserInputError } = require("apollo-server");
-
-const WEATHER_API = `https://api.openweathermap.org/data/2.5/weather?appid=${process.env.KEY}`;
-const GROUP_API = `https://api.openweathermap.org/data/2.5/group?appid=${process.env.KEY}`;
+const LAT = "47.5584";
+const LON = "7.5733";
+const WEATHER_API_BY_SEVEN_DAYS = `https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}}&lon=${LON}&appid=${process.env.KEY}`;
+const WEATHER_API_BY_NAME = `https://api.openweathermap.org/data/2.5/weather?appid=${process.env.KEY}`;
 
 const resolvers = {
-
   Query: {
-
     getCityByName: async (obj, args, context, info) => {
       // name is required | country and config are optional
       const { name, country, config } = args;
-      let url = `${WEATHER_API}&q=${name}`;
-
+      let urlByName = `${WEATHER_API_BY_NAME}&q=${name}`;
+      console.log(urlByName);
       // Add other fields if possible
-      if (country) url = url + `,${country}`;
-      if (config && config.units) url = url + `&units=${config.units}`;
-      if (config && config.lang) url = url + `&lang=${config.lang}`;
-
+      if (country) urlByName = urlByName + `,${country}`;
+      if (config && config.units)
+        urlByName = urlByName + `&units=${config.units}`;
+      if (config && config.lang) urlByName = urlByName + `&lang=${config.lang}`;
       try {
-        const { data } = await axios.get(url);
+        const { dataByName } = await axios.get(urlByName);
+
+        if (dataByName == undefined) {
+          console.log("Axios didn't fetch anything: dataByName is undefined");
+        }
 
         // By default, any invalid country code is ignored by the API
         // In this case, the API returns data for any city that matches the name
         // To prevent false positives, an error is thrown if country codes don't match
-        if (country && country.toUpperCase() !== data.sys.country) {
+        if (country && country.toUpperCase() !== dataByName.sys.country) {
           throw new UserInputError("Country code was invalid", {
             invalidArgs: { country: country },
           });
         }
 
+        const LAT = dataByName.coord.lat;
+        const LON = dataByName.coord.lon;
+        let urlBySevenDays = `${WEATHER_API_BY_SEVEN_DAYS}&lat=${LAT}&lon=${LON}`;
+        const { dataBySevenDays } = await axios.get(urlBySevenDays);
+        console.log("Data by seven days: ");
+        console.log(dataBySevenDays);
+
         return {
-          id: data.id,
-          name: data.name,
-          country: data.sys.country,
-          coord: data.coord,
-          weather: {
+          id: dataByName.id,
+          name: dataByName.name,
+          country: dataByName.sys.country,
+          coord: dataByName.coord,
+          today: {
             summary: {
-              title: data.weather[0].main,
-              description: data.weather[0].description,
-              icon: data.weather[0].icon,
+              title: dataBySevenDays.current.weather[0].main,
+              description: dataBySevenDays.current.weather[0].description,
+              icon: dataBySevenDays.current.weather[0].icon,
+              pressure: dataBySevenDays.current.pressure,
+              sunrise: dataBySevenDays.current.sunrise,
+              sunset: dataBySevenDays.current.sunset,
+              humidity: dataBySevenDays.current.humidity,
+              visibility: dataBySevenDays.current.visibility,
             },
             temperature: {
-              actual: data.main.temp,
-              feelsLike: data.main.feels_like,
-              min: data.main.temp_min,
-              max: data.main.temp_max,
+              actual: dataByName.main.temp,
+              min: dataByName.main.temp_min,
+              max: dataByName.main.temp_max,
             },
             wind: {
-              speed: data.wind.speed,
-              deg: data.wind.deg,
+              speed: dataBySevenDays.current.wind_speed,
             },
-            clouds: {
-              all: data.clouds.all,
-              visibility: data.visibility,
-              humidity: data.main.humidity,
-            },
-            timestamp: data.dt,
+            timestamp: dataBySevenDays.current.dt,
           },
-        };
-      } catch (e) {
-        return null;
-      }
-    },
-
-    getCityById: async (obj, args, context, info) => {
-      // id is required (can be string or array) | config is optional
-      const { id, config } = args;
-      let url = `${GROUP_API}&id=${id.join(",")}`;
-
-      // Add other fields if possible
-      if (config && config.units) url = url + `&units=${config.units}`;
-      if (config && config.lang) url = url + `&lang=${config.lang}`;
-
-      try {
-        const { data } = await axios.get(url);
-        const cityList = data.list.map((city) => {
-          return {
-            id: city.id,
-            name: city.name,
-            country: city.sys.country,
-            coord: city.coord,
-            weather: {
+          lastSevenDays: dataBySevenDays.daily.map((item) => {
+            return {
               summary: {
-                title: city.weather[0].main,
-                description: city.weather[0].description,
-                icon: city.weather[0].icon,
+                title: dataBySevenDays.current.weather[0].main,
+                description: dataBySevenDays.current.weather[0].description,
+                icon: dataBySevenDays.current.weather[0].icon,
+                pressure: dataBySevenDays.current.pressure,
+                sunrise: dataBySevenDays.current.sunrise,
+                sunset: dataBySevenDays.current.sunset,
+                humidity: dataBySevenDays.current.humidity,
+                visibility: dataBySevenDays.current.visibility,
               },
               temperature: {
-                actual: city.main.temp,
-                feelsLike: city.main.feels_like,
-                min: city.main.temp_min,
-                max: city.main.temp_max,
+                actual: dataByName.main.temp,
+                min: dataByName.main.temp_min,
+                max: dataByName.main.temp_max,
               },
               wind: {
-                speed: city.wind.speed,
-                deg: city.wind.deg,
+                speed: dataBySevenDays.current.wind_speed,
               },
-              clouds: {
-                all: city.clouds.all,
-                visibility: city.visibility,
-                humidity: city.main.humidity,
-              },
-              timestamp: city.dt,
-            },
-          };
-        });
-        return cityList;
+              timestamp: dataBySevenDays.current.dt,
+            };
+          }),
+        };
       } catch (e) {
-        return null;
+        return e;
       }
     },
-    
   },
-
 };
 
 module.exports = {
