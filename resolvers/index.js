@@ -58,29 +58,29 @@ const resolvers = {
             wind: {
               speed: dataBySevenDays.data.current.wind_speed,
             },
-            timestamp: dataBySevenDays.data.current.dt,
+            dt: dataBySevenDays.data.current.dt,
           },
           forecastNextDays: dataBySevenDays.data.daily.map((item) => {
             return {
               summary: {
-                title: dataByName.weather[0].main,
-                description: dataByName.weather[0].description,
-                icon: dataByName.weather[0].icon,
-                pressure: dataBySevenDays.data.current.pressure,
-                sunrise: dataBySevenDays.data.current.sunrise,
-                sunset: dataBySevenDays.data.current.sunset,
-                humidity: dataBySevenDays.data.current.humidity,
-                visibility: dataBySevenDays.data.current.visibility,
+                title: item.weather[0].main,
+                description: item.weather[0].description,
+                icon: item.weather[0].icon,
+                pressure: item.pressure,
+                sunrise: item.sunrise,
+                sunset: item.sunset,
+                humidity: item.humidity,
+                visibility: item.visibility,
               },
               temperature: {
-                actual: dataByName.main.temp,
-                min: dataByName.main.temp_min,
-                max: dataByName.main.temp_max,
+                actual: item.day,
+                min: item.temp_min,
+                max: item.temp_max,
               },
               wind: {
-                speed: dataBySevenDays.data.current.wind_speed,
+                speed: item.wind_speed,
               },
-              timestamp: dataBySevenDays.data.current.dt,
+              dt: item.dt,
             };
           }),
         };

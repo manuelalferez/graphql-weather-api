@@ -40,7 +40,7 @@ const typeDefs = gql`
     summary: Summary
     temperature: Temperature
     wind: Wind
-    timestamp: Int
+    dt: Int
   }
 
   input ConfigInput {
