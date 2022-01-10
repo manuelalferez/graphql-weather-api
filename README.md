@@ -1,11 +1,11 @@
 # 🌦️ GraphQL Weather API
 #### A GraphQL Wrapper for the [Open Weather Map API](https://openweathermap.org/api)
 
-Retrieve the current weather for any given city. Since this GraphQL API uses the free-tier of the Open Weather Map API, it is restricted to 60 calls/minute. 
+Retrieve the current weather for any given city and **gives you back that city's weather in the next seven days**. Since this GraphQL API uses the free-tier of the Open Weather Map API, it is restricted to 60 calls/minute. 
 
 However, feel free to use it for prototyping and demo projects anyways. A live version is available at:
 
-[graphql-weather-api.herokuapp.com](https://graphql-weather-api.herokuapp.com/) 🌈
+[graphql-weather-seven-days-api.herokuapp.com/](https://graphql-weather-seven-days-api.herokuapp.com/) 🌈
 
 ## How to Use
 
