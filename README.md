@@ -12,47 +12,66 @@ However, feel free to use it for prototyping and demo projects anyways. A live v
 #### Queries
 
 * getCityByName (`name` *required*, `country` *optional*, `config` *optional*)
-* getCityById (`id` *required*, , `config` *optional*)
 
 *Language and unit system can be specified via `config`.*
 
 #### Example with all weather data
 
-```graphql
+```
 query {
-  getCityByName(name: "Gothenburg") {
+  getCityByName(name: "Basel") {
     id
     name
     country
     coord {
-      lon
       lat
+      lon
     }
-    weather {
+    today {
       summary {
         title
         description
         icon
+        pressure
+        sunrise
+        sunset
+        humidity
+        visibility
       }
       temperature {
         actual
-        feelsLike
         min
         max
       }
       wind {
         speed
-        deg
       }
-      clouds {
-        all
-        visibility
+      dt
+    }
+    forecastNextDays {
+      summary {
+        title
+        description
+        icon
+        pressure
+        sunrise
+        sunset
         humidity
+        visibility
       }
-      timestamp
+      temperature {
+        actual
+        min
+        max
+      }
+      wind {
+        speed
+      }
+      dt
     }
   }
 }
+
 ```
 
 ## How to Install
@@ -68,9 +87,4 @@ The server starts at http://localhost:4000/
 
 ## About
 
-Konstantin Münster – [konstantin.digital](https://konstantin.digital) – [mail@konstantin.digital](mailto:mail@konstantin.digital)
-
-Distributed under the [MIT](http://showalicense.com/?fullname=Konstantin+M%C3%BCnster&year=2019#license-mit) license. 
-See ``LICENSE`` for more information.
-
-[https://github.com/konstantinmuenster](https://github.com/konstantinmuenster)
+This is a fork on the project of: [https://github.com/konstantinmuenster/graphql-weather-api](https://github.com/konstantinmuenster/graphql-weather-api)
