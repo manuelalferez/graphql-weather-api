@@ -7,7 +7,7 @@ const typeDefs = gql`
     country: String
     coord: Coordinates
     today: Weather
-    lastSevenDays: [Weather]
+    forecastNextDays: [Weather]
   }
 
   type Coordinates {

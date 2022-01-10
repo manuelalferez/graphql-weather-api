@@ -60,7 +60,7 @@ const resolvers = {
             },
             timestamp: dataBySevenDays.data.current.dt,
           },
-          lastSevenDays: dataBySevenDays.data.daily.map((item) => {
+          forecastNextDays: dataBySevenDays.data.daily.map((item) => {
             return {
               summary: {
                 title: dataByName.weather[0].main,
