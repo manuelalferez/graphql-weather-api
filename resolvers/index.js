@@ -73,9 +73,9 @@ const resolvers = {
                 visibility: item.visibility,
               },
               temperature: {
-                actual: item.day,
-                min: item.temp_min,
-                max: item.temp_max,
+                actual: item.temp.day,
+                min: item.temp.min,
+                max: item.temp.max,
               },
               wind: {
                 speed: item.wind_speed,
