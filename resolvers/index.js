@@ -52,8 +52,8 @@ const resolvers = {
             },
             temperature: {
               actual: dataByName.main.temp,
-              min: dataByName.main.temp_min,
-              max: dataByName.main.temp_max,
+              min: dataBySevenDays.data.daily[0].temp.min,
+              max: dataBySevenDays.data.daily[0].temp.max,
             },
             wind: {
               speed: dataBySevenDays.data.current.wind_speed,
